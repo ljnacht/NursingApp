@@ -10,7 +10,16 @@
         <link rel="stylesheet" href="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css">
       	<script src="http://code.jquery.com/jquery-1.11.3.min.js"></script>
       	<script src="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
-        <title> Ostap Lily Alex</title>
+        <title> Ostap Lily Alex Rachel</title>
+
+        <script>
+          $(document).ready(function(){
+            $.get("js/form.json",function(data){
+              console.log(data.topics);
+            });
+          });
+        </script>
+
     </head>
     <body>
           <div class="header">
@@ -28,27 +37,27 @@
 
                 <tr>
                   <td class="cat-head">Category 1</td>
-        					<td><input type="text"></input></td>
-        					<td><input type="text"></input></td>
-        					<td><input type="text"></input></td>
+        					<td><button type="button" class="input"></button></td>
+        					<td><button type="button" class="input"></button></td>
+        					<td><button type="button" class="input"></button></td>
                 </tr>
                 <tr>
                   <td class="cat-head">Category 2</td>
-        					<td><input type="text"></input></td>
-        					<td><input type="text"></input></td>
-        					<td><input type="text"></input></td>
+                  <td><button type="button" class="input"></button></td>
+        					<td><button type="button" class="input"></button></td>
+        					<td><button type="button" class="input"></button></td>
                 </tr>
                 <tr>
                   <td class="cat-head">Category 3</td>
-        					<td><input type="text"></input></td>
-        					<td><input type="text"></input></td>
-        					<td><input type="text"></input></td>
+                  <td><button type="button" class="input"></button></td>
+        					<td><button type="button" class="input"></button></td>
+        					<td><button type="button" class="input"></button></td>
                 </tr>
                 <tr>
                   <td class="cat-head">Category 4</td>
-        					<td><input type="text"></input></td>
-        					<td><input type="text"></input></td>
-        					<td><input type="text"></input></td>
+                  <td><button type="button" class="input"></button></td>
+        					<td><button type="button" class="input"></button></td>
+        					<td><button type="button" class="input"></button></td>
                 </tr>
         				<tr>
         					<td><button type="button" class="ui-btn">Add Category</button></td>
