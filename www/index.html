@@ -31,6 +31,12 @@
       	<script src="http://code.jquery.com/jquery-1.11.3.min.js"></script>
       	<script src="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
         <title> Ostap Lily Alex</title>
+
+        <script>
+        $("#cat-btn-1").click(function(){
+          $("#cat-page-1").css("transform","translateX(0)");
+        });
+        </script>
     </head>
     <body>
         <div class="app">
@@ -48,25 +54,25 @@
                 </tr>
 
                 <tr>
-                  <td class="cat-head">Category 1</td>
+                  <td class="cat-head"><button type="button" id="cat-btn-1">Category 1</button></td>
                   <td><div class="info"></div></td>
                   <td><div class="info"></div></td>
                   <td><div class="info"></div></td>
                 </tr>
                 <tr>
-                  <td class="cat-head">Category 2</td>
+                  <td class="cat-head"><button type="button">Category 2</button></td>
                   <td><div class="info"></div></td>
                   <td><div class="info"></div></td>
                   <td><div class="info"></div></td>>
                 </tr>
                 <tr>
-                  <td class="cat-head">Category 3</td>
+                  <td class="cat-head"><button type="button">Category 3</button></td>
                   <td><div class="info"></div></td>
                   <td><div class="info"></div></td>
                   <td><div class="info"></div></td>
                 </tr>
                 <tr>
-                  <td class="cat-head">Category 4</td>
+                  <td class="cat-head"><button type="button">Category 4</button></td>
                   <td><div class="info"></div></td>
                   <td><div class="info"></div></td>
                   <td><div class="info"></div></td>
@@ -77,6 +83,11 @@
 
         		</table>
         	</form>
+
+          <div class="category-page" id="cat-page-1">
+          </div>
+
+
 
             <div id="deviceready" class="blink">
                 <p class="event listening"></p>
