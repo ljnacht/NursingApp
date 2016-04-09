@@ -10,20 +10,12 @@ h1{
   background-color: #1e3852;
 }
 
-thead{
-  text-align: center !important;
+#tblCalendar tr td{
+  border: solid black 1px;
+  border-collapse: collapse;
+  padding: 5px;
 }
 
-.cat-head{
-  text-align: center !important;
-}
-
-
-.info{
-  height: 150px;
-  width: 200px !important;
-  border: 1px #333 solid;
-}
 
 .category-page{
   transform: translateX(-100%);
