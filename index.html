@@ -7,11 +7,12 @@
         <meta name="msapplication-tap-highlight" content="no" />
         <!-- WARNING: for iOS 7, remove the width=device-width and height=device-height attributes. See https://issues.apache.org/jira/browse/CB-4323 -->
         <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width, height=device-height, target-densitydpi=device-dpi" />
-        <link rel="stylesheet" type="text/css" href="css/main-style.css" />
+        <link rel="stylesheet" type="text/css" href="css/calendar.css" />
         <link rel="stylesheet" href="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css">
       	<script src="http://code.jquery.com/jquery-1.11.3.min.js"></script>
       	<script src="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
-        <title> Ostap Lily Alex</title>
+        <link href='https://fonts.googleapis.com/css?family=Roboto:300,400,700' rel='stylesheet' type='text/css'>
+        <title> Event Calendar</title>
 
         <script>
         $("#cat-btn-1").click(function(){
@@ -26,36 +27,60 @@
               console.log(data.topics);
               console.log(data.timeline);
 
-              //creating headers
+              //creating/adding timeline headers
               $tr = $('<tr></tr>');
-              $tr.append($('<td>&nbsp;</td>')); //blank
+              $tr.css('position', 'fixed');
+              $tr.append($('<th class="timeHeader" >&nbsp;</th>')); //blank
               for(var j=0; j < data.timeline.length; j++){
-                $td = $('<td></td>');
+                $td = $('<th></th>');
+                $td.attr('class' , 'timeHeader');
                 $td.html(data.timeline[j].timeItemLabel);
                 $tr.append($td);
               }
               $tbl.append($tr);
 
+              //blank row
+              $tr = $('<tr></tr>');
+              $td = $('<th></th>');
+              $td.html('&nbsp;</br>&nbsp;');
+              $tr.append($td);
+              $tbl.append($tr);
+
+              //creating/adding topic rows
               for(var i=0; i < data.topics.length; i++){
-                console.log("Row label value: "  + data.topics[i].topicLabel);
+                //create row
                 $tr = $('<tr></tr>');
 
-                //create input cell
-                $td = $('<td></td>');
-                $td.id = i;
-                $td.html(data.topics[i].topicLabel);
-
-                //add input cells to the row
+                //create topic title cell
+                $td = $('<th></th>');
+                $td.attr('id', 'topic' + i);
+                $td.attr('class', 'topicHeader');
+                $td.html(data.topics[i].topicTitle);
+                $td.append('</br></br><img src="img/edit.png" alt="edit" />');
+                $td.click(function(){
+                  //function to go to edit screen
+                });
                 $tr.append($td);
+
+                //add input cells to the topic row
                 for(var j=0; j < data.timeline.length; j++){
                   $td = $('<td></td>');
-                  $td.html('&nbsp;');
+                  $txtInput = $('<div></div>');
+                  $txtInput.attr('class' , 'txtInput');
+                  $txtInput.html(' '); //this needs to be user input stuff
+                  $td.attr('id' , 'topic' + data.topics[i].topicID + '_time' + data.timeline[j].timeItemID);
+                  $td.append($txtInput);
+                  $td.click(function(){
+                    /*$txt = $('<input>');
+                    $txt.attr('type', 'text');
+                    $txt.attr('id', 'txt_' + $td.attr('id'));
+                    $td.append($txt);*/
+                  });
                   $tr.append($td);
                 }
-
                 //add row to table
                 $tbl.append($tr);
-              }
+              }//end topic row loop
           });
         });
 
@@ -64,53 +89,13 @@
     <body>
         <div class="app">
           <div class="header">
-      			<h1>Event Calendar For {NAME}</h1>
+      			Event Calendar
       		</div>
 
           <table id ="tblCalendar">
           </table>
 
-          <!--<form method="post" action="">
-        		<table>
-                <tr style="text-align:center;">
-                  <td></td>
-                  <td>Time 1</td>
-                  <td>Time 2</td>
-                  <td>Time 3</td>
-                </tr>
-                <tr>
-                  <td class="cat-head"><button type="button" id="cat-btn-1">Category 1</button></td>
-                  <td><div class="info"></div></td>
-                  <td><div class="info"></div></td>
-                  <td><div class="info"></div></td>
-                </tr>
-                <tr>
-                  <td class="cat-head"><button type="button">Category 2</button></td>
-                  <td><div class="info"></div></td>
-                  <td><div class="info"></div></td>
-                  <td><div class="info"></div></td>>
-                </tr>
-                <tr>
-                  <td class="cat-head"><button type="button">Category 3</button></td>
-                  <td><div class="info"></div></td>
-                  <td><div class="info"></div></td>
-                  <td><div class="info"></div></td>
-                </tr>
-                <tr>
-                  <td class="cat-head"><button type="button">Category 4</button></td>
-                  <td><div class="info"></div></td>
-                  <td><div class="info"></div></td>
-                  <td><div class="info"></div></td>
-                </tr>
-        				<tr>
-        					<td><button type="button" class="ui-btn">Add Category</button></td>
-        				</tr>
-
-        		</table>
-        	</form>-->
-
-
-
+          <div id="btnAddTopic" type="button" onclick="">Add Topic</div> 
 
             <div id="deviceready" class="blink">
                 <p class="event listening"></p>
