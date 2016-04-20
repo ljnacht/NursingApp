@@ -1,23 +1,26 @@
 body, html{
-  font-family: 'Roboto', sans-serif;
-
+  font-family: 'Proxima Nova', sans-serif !important;
+	margin: 0;
 }
 
 .ui-overlay-a, .ui-page-theme-a, .ui-page-theme-a .ui-panel-wrapper{
-    background-color: #17649A !important;
+    background-color: #dedede !important;
 }
 
 .header{
   width: 100%;
   padding: 30px 0px;
-  background-color: #A8CB17;
+  background-color: #4ECDC4;
   color: white;
   text-align: center;
   font-size: 2em;
+  height: 50px;
+  text-shadow: none;
 }
 
 td{
- border-bottom: solid 5px #5499c9;
+ border-bottom: solid 1px #dedede;
+ border-right: 1px solid #dedede;
 }
 
 .txtInput{
@@ -30,22 +33,80 @@ td{
   border-collapse: collapse;
 }
 
+tbody tr:first-child {
+	height: 66px;
+}
+
+.blank th {
+	padding: 0;
+	height: 65px;
+}
+
+.tableHead.scroll {
+	position: fixed;
+	top: 0;
+	right: 0;
+}
+
+.tableHead.scroll th {
+	width: 10%;
+}
+
 th{
   padding: 20px 0px;
-  background-color: #17649A;
-  border-color: #17649A;
-  color: white;
+  background-color: #efefef;
+  border-color: #dedede;
+  color: #777;
   text-shadow: none;
   font-size: 1.2em;
   font-weight: 300;
-  border-bottom: solid 5px #5499c9;
+  border-bottom: solid 1px #dedede;
 }
 
 .topicHeader{
   width: 18%;
+  border-right: 1px solid #dedede;
 }
 
 .timeHeader{
   width: 16.4%;
-  border-top: solid 5px #5499c9;
+  border-top: solid 1px #dedede;
+}
+
+.iconEdit {
+	margin-top: 40px;
+}
+
+.icon-pencil {
+	width: 24px;
+	height: 24px;
+	fill: #777;
+	cursor: pointer;
+	transition: all .2s;
+}
+
+.icon-pencil:hover {
+	fill: #cdae20;
+}
+
+.footer {
+	padding: 30px;
+	text-align: center;
+}
+
+.addTopic {
+	border: 0;
+	background: #4ECDC4;
+	border-radius: 30px;
+	padding: 10px 30px;
+	color: #fff;
+	font-family: inherit;
+	font-size: inherit;
+	line-height: inherit;
+	cursor: pointer;
+	transition: all .2s;
+}
+
+.addTopic:hover {
+	background-color: #3fa49d;
 }
