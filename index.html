@@ -1,24 +1,5 @@
 <!DOCTYPE html>
-<!--
-    Copyright (c) 2012-2014 Adobe Systems Incorporated. All rights reserved.
 
-    Licensed to the Apache Software Foundation (ASF) under one
-    or more contributor license agreements.  See the NOTICE file
-    distributed with this work for additional information
-    regarding copyright ownership.  The ASF licenses this file
-    to you under the Apache License, Version 2.0 (the
-    "License"); you may not use this file except in compliance
-    with the License.  You may obtain a copy of the License at
-
-    http://www.apache.org/licenses/LICENSE-2.0
-
-    Unless required by applicable law or agreed to in writing,
-    software distributed under the License is distributed on an
-    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-     KIND, either express or implied.  See the License for the
-    specific language governing permissions and limitations
-    under the License.
--->
 <html>
     <head>
         <meta charset="utf-8" />
@@ -26,75 +7,105 @@
         <meta name="msapplication-tap-highlight" content="no" />
         <!-- WARNING: for iOS 7, remove the width=device-width and height=device-height attributes. See https://issues.apache.org/jira/browse/CB-4323 -->
         <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width, height=device-height, target-densitydpi=device-dpi" />
-        <link rel="stylesheet" type="text/css" href="css/main-style.css" />
+        <link rel="stylesheet" type="text/css" href="css/calendar.css" />
         <link rel="stylesheet" href="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css">
       	<script src="http://code.jquery.com/jquery-1.11.3.min.js"></script>
-      	<script src="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
-        <title> Ostap Lily Alex</title>
+
+        <link href='https://fonts.googleapis.com/css?family=Roboto:300,400,700' rel='stylesheet' type='text/css'>
+        <title> Event Calendar</title>
 
         <script>
         $("#cat-btn-1").click(function(){
           $("#cat-page-1").css("transform","translateX(0)");
         });
+
+        $(document).ready(function(){
+          //create table
+          $tbl = $('#tblCalendar');
+		  $tbl.attr('cellpadding', 0);
+
+          $.get("js/form.json",function(data){
+              console.log(data.topics);
+              console.log(data.timeline);
+
+              //creating/adding timeline headers
+              $tr = $('<tr class="tableHead"></tr>');
+              $tr.append($('<th class="timeHeader" >&nbsp;</th>')); //blank
+              for(var j=0; j < data.timeline.length; j++){
+                $td = $('<th></th>');
+                $td.attr('class' , 'timeHeader');
+                $td.html(data.timeline[j].timeItemLabel);
+                $tr.append($td);
+              }
+              $tbl.append($tr);
+
+              //creating/adding topic rows
+              for(var i=0; i < data.topics.length; i++){
+                //create row
+                $tr = $('<tr></tr>');
+
+                //create topic title cell
+                $td = $('<th></th>');
+                $td.attr('id', 'topic' + i);
+                $td.attr('class', 'topicHeader');
+                $td.html(data.topics[i].topicTitle);
+                $td.append('<div class="iconEdit"><a href="modify.html"><svg class="icon icon-pencil"><use xlink:href="#icon-pencil"></use></svg></a></div>');
+                $td.click(function(){
+                  //function to go to edit screen
+                });
+                $tr.append($td);
+
+                //add input cells to the topic row
+                for(var j=0; j < data.timeline.length; j++){
+                  $td = $('<td></td>');
+                  $txtInput = $('<div></div>');
+                  $txtInput.attr('class' , 'txtInput');
+                  $txtInput.html(' '); //this needs to be user input stuff
+                  $td.attr('id' , 'topic' + data.topics[i].topicID + '_time' + data.timeline[j].timeItemID);
+                  $td.append($txtInput);
+                  $td.click(function(){
+                    /*$txt = $('<input>');
+                    $txt.attr('type', 'text');
+                    $txt.attr('id', 'txt_' + $td.attr('id'));
+                    $td.append($txt);*/
+                  });
+                  $tr.append($td);
+                }
+                //add row to table
+                $tbl.append($tr);
+              }//end topic row loop
+          });
+
+		  $(window).scroll(function() {
+			if ($(this).scrollTop() > 110){
+			    $('.tableHead').addClass("scroll");
+			  }
+			  else{
+			    $('.tableHead').removeClass("scroll");
+			  }
+			});
+        });
+
         </script>
     </head>
     <body>
+		<svg style="display:none;">
+			<symbol id="icon-pencil" viewBox="0 0 24 24">
+				<title>pencil</title>
+				<path class="path1" d="M22.6 1.164c-0.817-0.783-1.719-1.18-2.681-1.18-1.505 0-2.602 0.972-2.903 1.27-0.423 0.419-14.839 14.841-14.839 14.841-0.094 0.095-0.163 0.213-0.198 0.342-0.325 1.202-1.954 6.533-1.97 6.586-0.084 0.273-0.009 0.57 0.192 0.772 0.145 0.144 0.337 0.221 0.535 0.221 0.078 0 0.156-0.012 0.232-0.037 0.055-0.018 5.558-1.797 6.464-2.067 0.119-0.036 0.228-0.1 0.317-0.188 0.572-0.566 14.019-13.862 14.911-14.784 0.923-0.951 1.382-1.942 1.364-2.944-0.018-0.989-0.498-1.942-1.425-2.832zM16.777 3.652c0.382 0.093 1.283 0.395 2.204 1.324 0.93 0.938 1.182 2.011 1.228 2.255-2.949 2.934-9.737 9.65-12.413 12.297-0.247-0.576-0.647-1.269-1.289-1.916-0.785-0.79-1.583-1.237-2.199-1.488 2.648-2.649 9.564-9.568 12.469-12.471zM3.29 17.389c0.412 0.11 1.268 0.427 2.141 1.307 0.672 0.678 0.989 1.425 1.132 1.881-1.042 0.335-3.325 1.123-4.776 1.591 0.43-1.414 1.156-3.616 1.503-4.778zM21.572 5.868c-0.031 0.031-0.081 0.083-0.142 0.144-0.237-0.611-0.653-1.395-1.373-2.121-0.736-0.742-1.482-1.179-2.080-1.438 0.051-0.051 0.090-0.090 0.106-0.105 0.086-0.085 0.865-0.829 1.836-0.829 0.559 0 1.107 0.255 1.632 0.758 0.621 0.596 0.942 1.184 0.952 1.748 0.010 0.576-0.303 1.196-0.93 1.843z"></path>
+			</symbol>
+		</svg>
         <div class="app">
           <div class="header">
-      			<h1>Event Calendar For {NAME}</h1>
+      			Event Calendar
       		</div>
 
-          <form method="post" action="">
-        		<table cellspacing="1">
-                <tr style="text-align:center;">
-                  <td></td>
-                  <td>Time 1</td>
-                  <td>Time 2</td>
-                  <td>Time 3</td>
-                </tr>
+          <table id ="tblCalendar">
+          </table>
 
-                <tr>
-                  <td class="cat-head">
-					  <button id="cat-btn-1">Category 1</button>
-				  </td>
-                  <td><div class="info"></div></td>
-                  <td><div class="info"></div></td>
-                  <td><div class="info"></div></td>
-                </tr>
-                <tr>
-                  <td class="cat-head"><button type="button">Category 2</button></td>
-                  <td><div class="info"></div></td>
-                  <td><div class="info"></div></td>
-                  <td><div class="info"></div></td>>
-                </tr>
-                <tr>
-                  <td class="cat-head"><button type="button">Category 3</button></td>
-                  <td><div class="info"></div></td>
-                  <td><div class="info"></div></td>
-                  <td><div class="info"></div></td>
-                </tr>
-                <tr>
-                  <td class="cat-head"><button type="button">Category 4</button></td>
-                  <td><div class="info"></div></td>
-                  <td><div class="info"></div></td>
-                  <td><div class="info"></div></td>
-                </tr>
-        				<tr>
-        					<td><button type="button" class="ui-btn">Add Category</button></td>
-        				</tr>
-
-        		</table>
-        	</form>
-
-          <div class="category-page" id="cat-page-1">
-          </div>
-
-
-
-            <div id="deviceready" class="blink">
-                <p class="event listening"></p>
-                <p class="event received"></p>
-            </div>
+			<div class="footer">
+	        	<button class="addTopic" id="btnAddTopic">Add Topic</button>
+			</div>
         </div>
         <script type="text/javascript" src="cordova.js"></script>
         <script type="text/javascript" src="js/index.js"></script>
