@@ -15,7 +15,7 @@
     <script>
 
     $(document).ready(function(){
-    $tbl = $('#tblCalendar');
+        $tbl = $('#tblCalendar');
         $.getJSON("js/form.json", function(data) {
 
         $.getJSON("js/caldata.json", function(calendarData){
@@ -78,16 +78,21 @@
 
     });
 
-    $(window).scroll(function() {
+    /*$(window).scroll(function() {
     if ($(this).scrollTop() > 110){
         $('.tableHead').addClass("scroll");
       }
       else{
         $('.tableHead').removeClass("scroll");
       }
-    });
+    });*/
 
   });
+
+    $( "#btnAddTopic" ).click(function() {
+      
+    });
+
     function saveItemData(controlID, val){
         var topicID, timeItemID;
         var idArray = controlID.split('_');
