@@ -15,12 +15,13 @@
     <script>
 
     $(document).ready(function(){
+        var currentTopicsID;
         $tbl = $('#tblCalendar');
         $.getJSON("js/form.json", function(data) {
 
         $.getJSON("js/caldata.json", function(calendarData){
 
-        console.log(calendarData);
+        //console.log(calendarData);
 
         // console.log(data);
         $tr = $('<tr class="tableHead"></tr>');
@@ -44,39 +45,76 @@
 
             //Add boxes and text areas in each row equal to number of columns
             $tr.append($td);
-        for (var j = 0; j < data.timeline.length; j++) {
-            $td = $('<td class="txtInput"></td>');
-            $td.attr('id', 'td_' + data.topics[i].topicID + '_' + data.timeline[j].timeItemID);
+            for (var j = 0; j < data.timeline.length; j++) {
+                $td = $('<td class="txtInput"></td>');
+                $td.attr('id', 'td_' + data.topics[i].topicID + '_' + data.timeline[j].timeItemID);
 
-            $txt = $('<textarea></textarea>');
-            $txt.val(getCalendarDataValue(calendarData, data.topics[i].topicID, data.timeline[j].timeItemID));
-            $txt.attr('id', 'txt_' + data.topics[i].topicID + '_' + data.timeline[j].timeItemID);
+                $txt = $('<textarea></textarea>');
+                $txt.val(getCalendarDataValue(calendarData, data.topics[i].topicID, data.timeline[j].timeItemID));
+                $txt.attr('id', 'txt_' + data.topics[i].topicID + '_' + data.timeline[j].timeItemID);
 
-            $txt.focusout(function(evt){
-                $obj = $('#' + evt.target.id);
-                console.log($obj);
-                saveItemData($obj.attr('id'), $obj.val());
-            });
-            $txt.css('display', 'none');
+                currentTopicsID = data.topics[i].topicID;
 
-            $div = $('<div></div>');
-            $div.attr('id', 'div_' + data.topics[i].topicID + '_' + data.timeline[j].timeItemID);
-            $div.html(getCalendarDataValue(calendarData, data.topics[i].topicID, data.timeline[j].timeItemID));
-            $div.click(function(evt){
-               displayEditableText(evt.target.id);
-            });
-            console.log($div);
-            $td.append($txt);
-            $td.append($div);
-            $tr.append($td);
-        }
+                $txt.focusout(function(evt){
+                    $obj = $('#' + evt.target.id);
+                    //console.log($obj);
+                    saveItemData($obj.attr('id'), $obj.val());
+                });
+                $txt.css('display', 'none');
+
+                $div = $('<div></div>');
+                $div.attr('id', 'div_' + data.topics[i].topicID + '_' + data.timeline[j].timeItemID);
+                $div.html(getCalendarDataValue(calendarData, data.topics[i].topicID, data.timeline[j].timeItemID));
+                $div.click(function(evt){
+                   displayEditableText(evt.target.id);
+                });
+                //console.log($div);
+                $td.append($txt);
+                $td.append($div);
+                $tr.append($td);
+            }
             $tbl.append($tr);
         }
 
+        $( "#submitAddTopic" ).click(function() {
+            console.log('here');
+            currentTopicsID += 1;
+            $tr = $('<tr></tr>');
+            $th = $('<th class="topicHeader"></th>');
+            //need to figure out how to give this an id
+            $th.html($('#txtAddTopic').val());
+            $tr.append($th);
 
-        });
+            /*for (var k = 0; k < data.timeline.length; k++) {
+              $td = $('<td class="txtInput"></td>');
+              $td.attr('id', 'td_' + currentTopicsID + '_' + data.timeline[k].timeItemID);
 
-    });
+              $txt = $('<textarea></textarea>');
+              $txt.attr('id', 'txt_' + currentTopicsID + '_' + data.timeline[k].timeItemID);
+
+              $txt.focusout(function(evt){
+                  $obj = $('#' + evt.target.id);
+                  //console.log($obj);
+                  saveItemData($obj.attr('id'), $obj.val());
+              });
+              $txt.css('display', 'none');
+
+              $div = $('<div></div>');
+              $div.attr('id', 'div_' + currentTopicsID + '_' + data.timeline[k].timeItemID);
+              $div.html(getCalendarDataValue(calendarData, currentTopicsID, data.timeline[k].timeItemID));
+              $div.click(function(evt){
+                 displayEditableText(evt.target.id);
+              });
+              $td.append($txt);
+              $td.append($div);
+              $tr.append($td);
+            }*/
+            $tbl.append($tr);
+       }); //end submitAddTopic
+      });//end caldata.js
+
+    }); //end form.js
+
 
     /*$(window).scroll(function() {
     if ($(this).scrollTop() > 110){
@@ -87,11 +125,17 @@
       }
     });*/
 
-  });
+    $('#btnAddTopic').click(function() {
+      $('body').toggleClass('no-scroll');
+      $('.modal').toggleClass('open');
+    });//end btnAddTopic
 
-    $( "#btnAddTopic" ).click(function() {
-      
-    });
+    $('.overlay').click(function() {
+      $('.modal').removeClass('open');
+      $('body').removeClass('no-scroll');
+    });//end overlay
+
+  }); //end document.ready
 
     function saveItemData(controlID, val){
         var topicID, timeItemID;
@@ -144,6 +188,18 @@
 
   <div class="footer">
         <button class="addTopic" id="btnAddTopic">Add Topic</button>
+  </div>
+
+  <div class="modal">
+    <div class="overlay"></div>
+    <div class="modal__box">
+      <h2 class="modal__header">Topic Name</h2>
+      <!-- Hey! -->
+      <form id="modal_submit" action="">
+        <textarea id="txtAddTopic" class="modal__textarea"></textarea>
+        <input type="submit" id="submitAddTopic" class="addTopic" name="submit" />
+      </form>
+    </div>
   </div>
 </body>
 </html>
