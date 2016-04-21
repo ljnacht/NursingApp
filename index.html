@@ -20,6 +20,16 @@
         });
 
         $(document).ready(function(){
+
+			$('#btnAddTopic').click(function() {
+				$('body').toggleClass('no-scroll');
+				$('.modal').toggleClass('open');
+			});
+
+			$('.overlay').click(function() {
+				$('.modal').removeClass('open');
+				$('body').removeClass('no-scroll');
+			})
           //create table
           $tbl = $('#tblCalendar');
 		  $tbl.attr('cellpadding', 0);
@@ -61,7 +71,7 @@
                   $txtInput = $('<div></div>');
                   $txtInput.attr('class' , 'txtInput');
                   $txtInput.html(' '); //this needs to be user input stuff
-                  $td.attr('id' , 'topic' + data.topics[i].topicID + '_time' + data.timeline[j].timeItemID);
+                  $td.attr('id' , data.topics[i].topicID + '_' + data.timeline[j].timeItemID);
                   $td.append($txtInput);
                   $td.click(function(){
                     /*$txt = $('<input>');
@@ -105,6 +115,17 @@
 
 			<div class="footer">
 	        	<button class="addTopic" id="btnAddTopic">Add Topic</button>
+			</div>
+
+			<div class="modal">
+				<div class="overlay"></div>
+				<div class="modal__box">
+					<h2 class="modal__header">Topic Name</h2>
+					<form id="modal_submit" action="">
+						<textarea class="modal__textarea"></textarea>
+						<input type="submit" class="addTopic" name="submit">
+					</form>
+				</div>
 			</div>
         </div>
         <script type="text/javascript" src="cordova.js"></script>
