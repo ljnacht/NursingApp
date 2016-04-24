@@ -81,11 +81,19 @@
             currentTopicsID += 1;
             $tr = $('<tr></tr>');
             $th = $('<th class="topicHeader"></th>');
+
+			$count = 0;
             //need to figure out how to give this an id
             $th.html($('#txtAddTopic').val());
             $tr.append($th);
 
-            /*for (var k = 0; k < data.timeline.length; k++) {
+			$('#tblCalendar tr').each(function() {
+				$count++;
+			});
+
+			$th.attr('id', $count - 1);
+
+            for (var k = 0; k < data.timeline.length; k++) {
               $td = $('<td class="txtInput"></td>');
               $td.attr('id', 'td_' + currentTopicsID + '_' + data.timeline[k].timeItemID);
 
@@ -108,7 +116,7 @@
               $td.append($txt);
               $td.append($div);
               $tr.append($td);
-            }*/
+            }
             $tbl.append($tr);
        }); //end submitAddTopic
       });//end caldata.js
@@ -174,9 +182,22 @@
 
                 $div.css('display', 'none');
                 $txt.css('display', 'block');
+
+				$txt.focus();
             }
 
         }
+
+		$(document).on('blur', 'table textarea', function() {
+			$(this).hide();
+			$(this).next().show();
+		});
+
+		$(document).on('submit', '#modal_submit', function(e) {
+			e.preventDefault();
+			$('.modal').toggleClass('open');
+			$('body').toggleClass('no-scroll');
+		});
     </script>
 </head>
 <body>
@@ -194,11 +215,12 @@
     <div class="overlay"></div>
     <div class="modal__box">
       <h2 class="modal__header">Topic Name</h2>
-      <!-- Hey! -->
-      <form id="modal_submit" action="">
+
+      <form id="modal_submit">
         <textarea id="txtAddTopic" class="modal__textarea"></textarea>
         <input type="submit" id="submitAddTopic" class="addTopic" name="submit" />
       </form>
+
     </div>
   </div>
 </body>
