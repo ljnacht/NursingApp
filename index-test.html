@@ -100,11 +100,12 @@
               $txt = $('<textarea></textarea>');
               $txt.attr('id', 'txt_' + currentTopicsID + '_' + data.timeline[k].timeItemID);
 
-              $txt.focusout(function(evt){
-                  $obj = $('#' + evt.target.id);
-                  //console.log($obj);
-                  saveItemData($obj.attr('id'), $obj.val());
+
+              $txt.change(function(evt){
+               $obj = $('#' + evt.target.id);
+               saveItemData($obj.attr('id'), $obj.val(), calendarData);
               });
+
               $txt.css('display', 'none');
 
               $div = $('<div></div>');
@@ -157,7 +158,7 @@
             dataToSave.timeItemID = timeItemID;
             dataToSave.textValue = val;
 
-            // console.log(dataToSave);
+            console.log(dataToSave);
             // $.post('savecalendarentry.php', dataToSave);
         }
     }

@@ -1,138 +1,233 @@
-<!DOCTYPE html>
-
 <html>
-    <head>
-        <meta charset="utf-8" />
-        <meta name="format-detection" content="telephone=no" />
-        <meta name="msapplication-tap-highlight" content="no" />
-        <!-- WARNING: for iOS 7, remove the width=device-width and height=device-height attributes. See https://issues.apache.org/jira/browse/CB-4323 -->
-        <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width, height=device-height, target-densitydpi=device-dpi" />
-        <link rel="stylesheet" type="text/css" href="css/calendar.css" />
-        <link rel="stylesheet" href="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css">
-      	<script src="http://code.jquery.com/jquery-1.11.3.min.js"></script>
+<head>
+  <meta charset="utf-8" />
+  <meta name="format-detection" content="telephone=no" />
+  <meta name="msapplication-tap-highlight" content="no" />
+  <!-- WARNING: for iOS 7, remove the width=device-width and height=device-height attributes. See https://issues.apache.org/jira/browse/CB-4323 -->
+  <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width, height=device-height, target-densitydpi=device-dpi" />
+  <link rel="stylesheet" type="text/css" href="css/calendar.css" />
 
-        <link href='https://fonts.googleapis.com/css?family=Roboto:300,400,700' rel='stylesheet' type='text/css'>
-        <title> Event Calendar</title>
 
-        <script>
-        $("#cat-btn-1").click(function(){
-          $("#cat-page-1").css("transform","translateX(0)");
-        });
+  <link href='https://fonts.googleapis.com/css?family=Roboto:300,400,700' rel='stylesheet' type='text/css'>
+  <title> Event Calendar</title>
+    <script src="js/jquery-2.2.3.min.js"></script>
 
-        $(document).ready(function(){
+    <script>
 
-			$('#btnAddTopic').click(function() {
-				$('body').toggleClass('no-scroll');
-				$('.modal').toggleClass('open');
-			});
+    $(document).ready(function(){
+        var currentTopicsID;
+        $tbl = $('#tblCalendar');
+        $.getJSON("js/form.json", function(data) {
 
-			$('.overlay').click(function() {
-				$('.modal').removeClass('open');
-				$('body').removeClass('no-scroll');
-			})
-          //create table
-          $tbl = $('#tblCalendar');
-		  $tbl.attr('cellpadding', 0);
+        $.getJSON("js/caldata.json", function(calendarData){
 
-          $.get("js/form.json",function(data){
-              console.log(data.topics);
-              console.log(data.timeline);
+        //console.log(calendarData);
 
-              //creating/adding timeline headers
-              $tr = $('<tr class="tableHead"></tr>');
-              $tr.append($('<th class="timeHeader" >&nbsp;</th>')); //blank
-              for(var j=0; j < data.timeline.length; j++){
-                $td = $('<th></th>');
-                $td.attr('class' , 'timeHeader');
-                $td.html(data.timeline[j].timeItemLabel);
-                $tr.append($td);
-              }
-              $tbl.append($tr);
+        // console.log(data);
+        $tr = $('<tr class="tableHead"></tr>');
+        $tr.append($('<th class="timeHeader">&nbsp;</th>'));
 
-              //creating/adding topic rows
-              for(var i=0; i < data.topics.length; i++){
-                //create row
-                $tr = $('<tr></tr>');
+        //Constructs rows, adds timeline values
+        for (var j = 0; j < data.timeline.length; j++) {
+            $th = $('<th class="timeHeader"></th>');
+            $th.html(data.timeline[j].timeItemLabel);
+            $tr.append($th);
+        }
+        $tbl.append($tr);
 
-                //create topic title cell
-                $td = $('<th></th>');
-                $td.attr('id', 'topic' + i);
-                $td.attr('class', 'topicHeader');
-                $td.html(data.topics[i].topicTitle);
-                $td.append('<div class="iconEdit"><a href="modify.html"><svg class="icon icon-pencil"><use xlink:href="#icon-pencil"></use></svg></a></div>');
-                $td.click(function(){
-                  //function to go to edit screen
+            //Populate the topics column
+        for (var i = 0; i < data.topics.length; i++) {
+            //console.log("Row label: " + data.topics[i].topicLabel);
+            $tr = $('<tr></tr>');
+            $td = $('<th class="topicHeader"></th>');
+            $td.attr('id', i);
+            $td.html(data.topics[i].topicTitle);
+
+            //Add boxes and text areas in each row equal to number of columns
+            $tr.append($td);
+            for (var j = 0; j < data.timeline.length; j++) {
+                $td = $('<td class="txtInput"></td>');
+                $td.attr('id', 'td_' + data.topics[i].topicID + '_' + data.timeline[j].timeItemID);
+
+                $txt = $('<textarea></textarea>');
+                $txt.val(getCalendarDataValue(calendarData, data.topics[i].topicID, data.timeline[j].timeItemID));
+                $txt.attr('id', 'txt_' + data.topics[i].topicID + '_' + data.timeline[j].timeItemID);
+
+                currentTopicsID = data.topics[i].topicID;
+
+                $txt.focusout(function(evt){
+                    $obj = $('#' + evt.target.id);
+                    //console.log($obj);
+                    saveItemData($obj.attr('id'), $obj.val());
                 });
+                $txt.css('display', 'none');
+
+                $div = $('<div></div>');
+                $div.attr('id', 'div_' + data.topics[i].topicID + '_' + data.timeline[j].timeItemID);
+                $div.html(getCalendarDataValue(calendarData, data.topics[i].topicID, data.timeline[j].timeItemID));
+                $div.click(function(evt){
+                   displayEditableText(evt.target.id);
+                });
+                //console.log($div);
+                $td.append($txt);
+                $td.append($div);
                 $tr.append($td);
+            }
+            $tbl.append($tr);
+        }
 
-                //add input cells to the topic row
-                for(var j=0; j < data.timeline.length; j++){
-                  $td = $('<td></td>');
-                  $txtInput = $('<div></div>');
-                  $txtInput.attr('class' , 'txtInput');
-                  $txtInput.html(' '); //this needs to be user input stuff
-                  $td.attr('id' , data.topics[i].topicID + '_' + data.timeline[j].timeItemID);
-                  $td.append($txtInput);
-                  $td.click(function(){
-                    /*$txt = $('<input>');
-                    $txt.attr('type', 'text');
-                    $txt.attr('id', 'txt_' + $td.attr('id'));
-                    $td.append($txt);*/
-                  });
-                  $tr.append($td);
-                }
-                //add row to table
-                $tbl.append($tr);
-              }//end topic row loop
-          });
+        $( "#submitAddTopic" ).click(function() {
+            console.log('here');
+            currentTopicsID += 1;
+            $tr = $('<tr></tr>');
+            $th = $('<th class="topicHeader"></th>');
 
-		  $(window).scroll(function() {
-			if ($(this).scrollTop() > 110){
-			    $('.tableHead').addClass("scroll");
-			  }
-			  else{
-			    $('.tableHead').removeClass("scroll");
-			  }
+			$count = 0;
+            //need to figure out how to give this an id
+            $th.html($('#txtAddTopic').val());
+            $tr.append($th);
+
+			$('#tblCalendar tr').each(function() {
+				$count++;
 			});
-        });
 
-        </script>
-    </head>
-    <body>
-		<svg style="display:none;">
-			<symbol id="icon-pencil" viewBox="0 0 24 24">
-				<title>pencil</title>
-				<path class="path1" d="M22.6 1.164c-0.817-0.783-1.719-1.18-2.681-1.18-1.505 0-2.602 0.972-2.903 1.27-0.423 0.419-14.839 14.841-14.839 14.841-0.094 0.095-0.163 0.213-0.198 0.342-0.325 1.202-1.954 6.533-1.97 6.586-0.084 0.273-0.009 0.57 0.192 0.772 0.145 0.144 0.337 0.221 0.535 0.221 0.078 0 0.156-0.012 0.232-0.037 0.055-0.018 5.558-1.797 6.464-2.067 0.119-0.036 0.228-0.1 0.317-0.188 0.572-0.566 14.019-13.862 14.911-14.784 0.923-0.951 1.382-1.942 1.364-2.944-0.018-0.989-0.498-1.942-1.425-2.832zM16.777 3.652c0.382 0.093 1.283 0.395 2.204 1.324 0.93 0.938 1.182 2.011 1.228 2.255-2.949 2.934-9.737 9.65-12.413 12.297-0.247-0.576-0.647-1.269-1.289-1.916-0.785-0.79-1.583-1.237-2.199-1.488 2.648-2.649 9.564-9.568 12.469-12.471zM3.29 17.389c0.412 0.11 1.268 0.427 2.141 1.307 0.672 0.678 0.989 1.425 1.132 1.881-1.042 0.335-3.325 1.123-4.776 1.591 0.43-1.414 1.156-3.616 1.503-4.778zM21.572 5.868c-0.031 0.031-0.081 0.083-0.142 0.144-0.237-0.611-0.653-1.395-1.373-2.121-0.736-0.742-1.482-1.179-2.080-1.438 0.051-0.051 0.090-0.090 0.106-0.105 0.086-0.085 0.865-0.829 1.836-0.829 0.559 0 1.107 0.255 1.632 0.758 0.621 0.596 0.942 1.184 0.952 1.748 0.010 0.576-0.303 1.196-0.93 1.843z"></path>
-			</symbol>
-		</svg>
-        <div class="app">
-          <div class="header">
-      			Event Calendar
-      		</div>
+			$th.attr('id', $count - 1);
 
-          <table id ="tblCalendar">
-          </table>
+            for (var k = 0; k < data.timeline.length; k++) {
+              $td = $('<td class="txtInput"></td>');
+              $td.attr('id', 'td_' + currentTopicsID + '_' + data.timeline[k].timeItemID);
 
-			<div class="footer">
-	        	<button class="addTopic" id="btnAddTopic">Add Topic</button>
-			</div>
+              $txt = $('<textarea></textarea>');
+              $txt.attr('id', 'txt_' + currentTopicsID + '_' + data.timeline[k].timeItemID);
 
-			<div class="modal">
-				<div class="overlay"></div>
-				<div class="modal__box">
-					<h2 class="modal__header">Topic Name</h2>
-					<!-- Hey! -->
-					<form id="modal_submit" action="">
-						<textarea class="modal__textarea"></textarea>
-						<input type="submit" class="addTopic" name="submit">
-					</form>
-				</div>
-			</div>
-        </div>
-        <script type="text/javascript" src="cordova.js"></script>
-        <script type="text/javascript" src="js/index.js"></script>
-        <script type="text/javascript">
-            app.initialize();
-        </script>
-    </body>
+
+              $txt.change(function(evt){
+               $obj = $('#' + evt.target.id);
+               saveItemData($obj.attr('id'), $obj.val(), calendarData);
+              });
+
+              $txt.css('display', 'none');
+
+              $div = $('<div></div>');
+              $div.attr('id', 'div_' + currentTopicsID + '_' + data.timeline[k].timeItemID);
+              $div.html(getCalendarDataValue(calendarData, currentTopicsID, data.timeline[k].timeItemID));
+              $div.click(function(evt){
+                 displayEditableText(evt.target.id);
+              });
+              $td.append($txt);
+              $td.append($div);
+              $tr.append($td);
+            }
+            $tbl.append($tr);
+       }); //end submitAddTopic
+      });//end caldata.js
+
+    }); //end form.js
+
+
+    /*$(window).scroll(function() {
+    if ($(this).scrollTop() > 110){
+        $('.tableHead').addClass("scroll");
+      }
+      else{
+        $('.tableHead').removeClass("scroll");
+      }
+    });*/
+
+    $('#btnAddTopic').click(function() {
+      $('body').toggleClass('no-scroll');
+      $('.modal').toggleClass('open');
+    });//end btnAddTopic
+
+    $('.overlay').click(function() {
+      $('.modal').removeClass('open');
+      $('body').removeClass('no-scroll');
+    });//end overlay
+
+  }); //end document.ready
+
+    function saveItemData(controlID, val){
+        var topicID, timeItemID;
+        var idArray = controlID.split('_');
+        var dataToSave = {};
+        if(idArray.length == 3){
+            topicID = idArray[1];
+            timeItemID = idArray[2];
+
+            dataToSave.topicID = topicID;
+            dataToSave.timeItemID = timeItemID;
+            dataToSave.textValue = val;
+
+            console.log(dataToSave);
+            // $.post('savecalendarentry.php', dataToSave);
+        }
+    }
+
+        function getCalendarDataValue(calData, topicID, timeItemID){
+            for(var k = 0; k < calData.caldata.length; k++){
+                if(calData.caldata[k].topicID == topicID && calData.caldata[k].timeItemID == timeItemID){
+                return calData.caldata[k].textValue;
+            }
+            }
+        }
+
+        function displayEditableText(controlID){
+            var idArray = controlID.split('_');
+
+            if(idArray.length == 3){
+                topicID = idArray[1];
+                timeItemID = idArray[2];
+
+                $div = $('#div_' + topicID + '_' + timeItemID);
+                $txt = $('#txt_' + topicID + '_' + timeItemID);
+
+                $div.css('display', 'none');
+                $txt.css('display', 'block');
+
+				$txt.focus();
+
+				$txt.parent().toggleClass('edit');
+            }
+
+        }
+
+		$(document).on('blur', 'table textarea', function() {
+			var text = $(this).val();
+			$(this).hide();
+			$(this).next().show();
+			$(this).next().text(text);
+			$(this).parent().toggleClass('edit');
+		});
+
+		$(document).on('submit', '#modal_submit', function(e) {
+			e.preventDefault();
+			$('.modal').toggleClass('open');
+			$('body').toggleClass('no-scroll');
+		});
+    </script>
+</head>
+<body>
+  <div class="header">
+    Event Calendar
+  </div>
+
+  <table id="tblCalendar"></table>
+
+  <div class="footer">
+        <button class="addTopic" id="btnAddTopic">Add Topic</button>
+  </div>
+
+  <div class="modal">
+    <div class="overlay"></div>
+    <div class="modal__box">
+      <h2 class="modal__header">Topic Name</h2>
+
+      <form id="modal_submit">
+        <textarea id="txtAddTopic" class="modal__textarea"></textarea>
+        <input type="submit" id="submitAddTopic" class="addTopic" name="submit" />
+      </form>
+
+    </div>
+  </div>
+</body>
 </html>
