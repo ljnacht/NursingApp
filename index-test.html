@@ -184,6 +184,8 @@
                 $txt.css('display', 'block');
 
 				$txt.focus();
+
+				$txt.parent().toggleClass('edit');
             }
 
         }
@@ -191,6 +193,7 @@
 		$(document).on('blur', 'table textarea', function() {
 			$(this).hide();
 			$(this).next().show();
+			$(this).parent().toggleClass('edit');
 		});
 
 		$(document).on('submit', '#modal_submit', function(e) {
