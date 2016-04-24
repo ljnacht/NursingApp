@@ -191,8 +191,10 @@
         }
 
 		$(document).on('blur', 'table textarea', function() {
+			var text = $(this).val();
 			$(this).hide();
 			$(this).next().show();
+			$(this).next().text(text);
 			$(this).parent().toggleClass('edit');
 		});
 
