@@ -149,6 +149,11 @@ th{
 	display: none;
 }
 
+td div {
+	height: 150px;
+	overflow-y: scroll;
+}
+
 .overlay {
 	position: fixed;
 	top: 0;
